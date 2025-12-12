@@ -1,0 +1,45 @@
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.register-header .ant-typography {
+  margin-bottom: 8px;
+}
+
+/* 响应式设计 */
+@media (max-width: 576px) {
+  .register-page {
+    padding: 16px;
+  }
+
+  .register-card {
+    max-width: 100%;
+  }
+
+  .register-header h2 {
+    font-size: 24px;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .register-card {
+    max-width: 500px;
+  }
+}

@@ -1,0 +1,98 @@
+/* 图书管理页面布局 */
+.book-management-layout {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+/* 页面头部 */
+.book-management-header {
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0 24px;
+  height: 64px;
+  line-height: 64px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header-title {
+  margin: 0 !important;
+  color: #1890ff;
+  font-weight: 600;
+}
+
+.user-info {
+  color: #666;
+  margin-right: 8px;
+}
+
+/* 内容区域 */
+.book-management-content {
+  padding: 24px;
+}
+
+.content-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  min-height: calc(100vh - 112px);
+}
+
+/* 响应式设计 - 需求 10.1, 10.2, 10.3 */
+@media (max-width: 768px) {
+  .book-management-header {
+    padding: 0 16px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    padding: 12px 0;
+  }
+
+  .header-title {
+    font-size: 18px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .book-management-content {
+    padding: 16px;
+  }
+
+  .content-wrapper {
+    padding: 16px;
+  }
+
+  .user-info {
+    display: block;
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .header-content {
+    width: 100%;
+  }
+
+  .header-content > div:last-child {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .header-content button {
+    flex: 1;
+    min-width: 100px;
+  }
+}
