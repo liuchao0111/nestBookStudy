@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
 
   // 图书管理
   BOOK_LIST: '/book/list',
+  BOOK_SEARCH: '/book/search',
   BOOK_GET: '/book', // GET /book/:id
   BOOK_CREATE: '/book/create',
   BOOK_UPDATE: '/book/update',

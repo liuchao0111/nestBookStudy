@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Layout, Button, Modal, message, Space, Typography } from 'antd'
-import { PlusOutlined, LogoutOutlined } from '@ant-design/icons'
+import { Layout, Button, Modal, message, Space, Typography, Input } from 'antd'
+import { PlusOutlined, LogoutOutlined, SearchOutlined } from '@ant-design/icons'
 import { BookList } from '@/components/BookList'
 import { BookFormModal } from '@/components/BookFormModal'
 import { useBooks } from '@/hooks/useBooks'
 import { useAuth } from '@/hooks/useAuth'
+import { searchBooks } from '@/api/book.api'
 import type { Book, BookFormData } from '@/types'
 import './BookManagementPage.css'
 
@@ -22,11 +23,47 @@ export const BookManagementPage: React.FC = () => {
   
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [editingBook, setEditingBook] = useState<Book | undefined>(undefined)
+  const [searchText, setSearchText] = useState('')
+  const [searchResults, setSearchResults] = useState<Book[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [isSearchMode, setIsSearchMode] = useState(false)
 
   // 组件挂载时获取图书列表 - 需求 4.1
   useEffect(() => {
     fetchBooks()
   }, [fetchBooks])
+
+  // 处理搜索
+  const handleSearch = async (value: string) => {
+    const keyword = value.trim()
+    setSearchText(value)
+
+    if (!keyword) {
+      // 如果搜索框为空，退出搜索模式，显示所有图书
+      setIsSearchMode(false)
+      setSearchResults([])
+      return
+    }
+
+    try {
+      setIsSearching(true)
+      setIsSearchMode(true)
+      const results = await searchBooks(keyword)
+      setSearchResults(Array.isArray(results) ? results : [])
+    } catch (error) {
+      message.error('搜索失败，请重试')
+      console.error('搜索错误:', error)
+    } finally {
+      setIsSearching(false)
+    }
+  }
+
+  // 重置搜索
+  const handleResetSearch = () => {
+    setSearchText('')
+    setIsSearchMode(false)
+    setSearchResults([])
+  }
 
   // 打开添加图书弹窗 - 需求 5.1
   const handleAddBook = () => {
@@ -131,9 +168,37 @@ export const BookManagementPage: React.FC = () => {
 
       <Content className="book-management-content">
         <div className="content-wrapper">
+          {/* 搜索栏 */}
+          <div className="search-bar">
+            <Input.Search
+              placeholder="搜索图书名称、作者或描述..."
+              allowClear
+              enterButton={
+                <Button type="primary" icon={<SearchOutlined />}>
+                  搜索
+                </Button>
+              }
+              size="large"
+              value={searchText}
+              onChange={(e) => handleSearch(e.target.value)}
+              onSearch={handleSearch}
+              style={{ maxWidth: 600 }}
+            />
+            {searchText && (
+              <Button onClick={handleResetSearch} style={{ marginLeft: 8 }}>
+                重置
+              </Button>
+            )}
+            {isSearchMode && (
+              <span style={{ marginLeft: 16, color: '#666' }}>
+                找到 {searchResults.length} 本图书
+              </span>
+            )}
+          </div>
+
           <BookList
-            books={books}
-            loading={loading}
+            books={isSearchMode ? searchResults : books}
+            loading={isSearchMode ? isSearching : loading}
             onEdit={handleEditBook}
             onDelete={handleDeleteBook}
           />

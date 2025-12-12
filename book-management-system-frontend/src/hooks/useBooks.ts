@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import * as bookApi from '@/api/book.api'
 import type { Book, CreateBookRequest, UpdateBookRequest } from '@/types'
 
@@ -25,23 +25,36 @@ export const useBooks = (): UseBooksReturn => {
   const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
+  
+  // 使用 useRef 跟踪请求状态，避免重复请求
+  const isFetchingRef = useRef<boolean>(false)
 
   /**
    * 获取图书列表
    * 需求：4.1
    */
   const fetchBooks = useCallback(async () => {
+    // 如果正在请求中，直接返回，避免重复请求
+    if (isFetchingRef.current) {
+      console.log('📌 跳过重复的 fetchBooks 请求')
+      return
+    }
+
     try {
+      isFetchingRef.current = true
       setLoading(true)
       setError(null)
+      console.log('🔄 开始获取图书列表...')
       const data = await bookApi.listBooks()
       setBooks(data)
+      console.log(`✅ 成功获取 ${data.length} 本图书`)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : '获取图书列表失败'
       setError(errorMessage)
-      console.error('获取图书列表失败:', err)
+      console.error('❌ 获取图书列表失败:', err)
     } finally {
       setLoading(false)
+      isFetchingRef.current = false
     }
   }, [])
 

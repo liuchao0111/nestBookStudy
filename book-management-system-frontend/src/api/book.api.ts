@@ -23,6 +23,21 @@ export const listBooks = async (): Promise<ListBooksResponse> => {
 }
 
 /**
+ * 搜索图书
+ * @param keyword 搜索关键词
+ * @returns 图书列表
+ */
+export const searchBooks = async (keyword: string): Promise<ListBooksResponse> => {
+  const response = await apiClient.get<ListBooksResponse>(
+    API_ENDPOINTS.BOOK_SEARCH,
+    {
+      params: { keyword }
+    }
+  )
+  return response.data
+}
+
+/**
  * 获取单个图书详情
  * @param id 图书 ID
  * @returns 图书详情
